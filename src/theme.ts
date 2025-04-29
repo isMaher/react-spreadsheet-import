@@ -1,7 +1,6 @@
-import { StepsTheme } from "chakra-ui-steps"
-import type { CSSObject } from "@chakra-ui/react"
-import type { DeepPartial } from "ts-essentials"
 import type { ChakraStylesConfig } from "chakra-react-select"
+import { StepsTheme } from "chakra-ui-steps"
+import type { DeepPartial } from "ts-essentials"
 import type { SelectOption } from "./types"
 
 const StepsComponent: typeof StepsTheme = {

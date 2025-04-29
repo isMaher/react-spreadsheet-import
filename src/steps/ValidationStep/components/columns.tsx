@@ -1,10 +1,11 @@
-import { Column, useRowSelection } from "react-data-grid"
-import { Box, Checkbox, Input, Switch, Tooltip } from "@chakra-ui/react"
-import type { Data, Fields } from "../../../types"
+import { Box, Checkbox, Input, Switch } from "@chakra-ui/react"
 import type { ChangeEvent } from "react"
-import type { Meta } from "../types"
+import { Column, useRowSelection } from "react-data-grid"
 import { CgInfo } from "react-icons/cg"
+import { Tooltip } from "src/components/ui/tooltip"
 import { TableSelect } from "../../../components/Selects/TableSelect"
+import type { Data, Fields } from "../../../types"
+import type { Meta } from "../types"
 
 const SELECT_COLUMN_KEY = "select-row"
 
@@ -28,18 +29,21 @@ export const generateColumns = <T extends string>(fields: Fields<T>): Column<Dat
       // eslint-disable-next-line  react-hooks/rules-of-hooks
       const [isRowSelected, onRowSelectionChange] = useRowSelection()
       return (
-        <Checkbox
+        <Checkbox.Root
           bg="white"
           aria-label="Select"
           isChecked={isRowSelected}
-          onChange={(event) => {
+          onChange={(event: { target: { checked: any }; nativeEvent: MouseEvent }) => {
             onRowSelectionChange({
               row: props.row,
               checked: Boolean(event.target.checked),
               isShiftClick: (event.nativeEvent as MouseEvent).shiftKey,
             })
           }}
-        />
+        >
+          <Checkbox.HiddenInput />
+          <Checkbox.Control />
+        </Checkbox.Root>
       )
     },
   },
@@ -116,12 +120,14 @@ export const generateColumns = <T extends string>(fields: Fields<T>): Column<Dat
                   event.stopPropagation()
                 }}
               >
-                <Switch
+                <Switch.Root
                   isChecked={row[column.key] as boolean}
                   onChange={() => {
                     onRowChange({ ...row, [column.key]: !row[column.key as T] })
                   }}
-                />
+                >
+                  <Switch.HiddenInput />
+                </Switch.Root>
               </Box>
             )
             break

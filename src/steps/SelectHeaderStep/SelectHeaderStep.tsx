@@ -1,10 +1,9 @@
+import { Dialog, Heading } from "@chakra-ui/react"
 import { useCallback, useState } from "react"
-import { Heading, ModalBody, useStyleConfig, Box } from "@chakra-ui/react"
-import { SelectHeaderTable } from "./components/SelectHeaderTable"
 import { ContinueButton } from "../../components/ContinueButton"
 import { useRsi } from "../../hooks/useRsi"
-import type { themeOverrides } from "../../theme"
 import type { RawData } from "../../types"
+import { SelectHeaderTable } from "./components/SelectHeaderTable"
 
 type SelectHeaderProps = {
   data: RawData[]
@@ -13,9 +12,6 @@ type SelectHeaderProps = {
 }
 
 export const SelectHeaderStep = ({ data, onContinue, onBack }: SelectHeaderProps) => {
-  const styles = useStyleConfig(
-    "SelectHeaderStep",
-  ) as (typeof themeOverrides)["components"]["SelectHeaderStep"]["baseStyle"]
   const { translations } = useRsi()
   const [selectedRows, setSelectedRows] = useState<ReadonlySet<number>>(new Set([0]))
   const [isLoading, setIsLoading] = useState(false)
@@ -31,10 +27,12 @@ export const SelectHeaderStep = ({ data, onContinue, onBack }: SelectHeaderProps
 
   return (
     <>
-      <ModalBody pb={0}>
-        <Heading {...styles.heading}>{translations.selectHeaderStep.title}</Heading>
+      <Dialog.Body pb={0}>
+        <Heading color="textColor" mb="8" fontSize="3xl">
+          {translations.selectHeaderStep.title}
+        </Heading>
         <SelectHeaderTable data={data} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
-      </ModalBody>
+      </Dialog.Body>
       <ContinueButton
         onContinue={handleContinue}
         onBack={onBack}

@@ -1,11 +1,11 @@
-import { StepState, StepType, UploadFlow } from "./UploadFlow"
-import { ModalHeader } from "@chakra-ui/react"
-import { useSteps, Step, Steps as Stepper } from "chakra-ui-steps"
+import { Step, Steps as Stepper, useSteps } from "chakra-ui-steps"
 import { CgCheck } from "react-icons/cg"
+import { StepState, StepType, UploadFlow } from "./UploadFlow"
 
-import { useRsi } from "../hooks/useRsi"
+import { Dialog } from "@chakra-ui/react"
 import { useRef, useState } from "react"
-import { steps, stepTypeToStepIndex, stepIndexToStepType } from "../utils/steps"
+import { useRsi } from "../hooks/useRsi"
+import { stepIndexToStepType, steps, stepTypeToStepIndex } from "../utils/steps"
 
 const CheckIcon = ({ color }: { color: string }) => <CgCheck size="36px" color={color} />
 
@@ -44,7 +44,7 @@ export const Steps = () => {
 
   return (
     <>
-      <ModalHeader display={["none", "none", "block"]}>
+      <Dialog.Header display={["none", "none", "block"]}>
         <Stepper
           activeStep={activeStep}
           checkIcon={CheckIcon}
@@ -55,7 +55,7 @@ export const Steps = () => {
             <Step label={translations[key].title} key={key} />
           ))}
         </Stepper>
-      </ModalHeader>
+      </Dialog.Header>
       <UploadFlow state={state} onNext={onNext} onBack={isNavigationEnabled ? onBack : undefined} />
     </>
   )
