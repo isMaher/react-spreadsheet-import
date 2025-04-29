@@ -54,8 +54,8 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.1",
-    "@emotion/react": "^11.11.1",
+    "@chakra-ui/react": "^3.16.1",
+    "@emotion/react": "^11.14.0",
     "chakra-react-select": "^4.7.5",
     "chakra-ui-steps": "2.0.4",
     "js-levenshtein": "1.1.6",
