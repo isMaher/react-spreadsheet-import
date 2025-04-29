@@ -56,10 +56,8 @@
   "dependencies": {
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "chakra-react-select": "^4.7.5",
     "chakra-ui-steps": "2.0.4",
-    "framer-motion": "^10.16.4",
     "js-levenshtein": "1.1.6",
     "lodash": "4.17.21",
     "react-data-grid": "7.0.0-beta.13",
