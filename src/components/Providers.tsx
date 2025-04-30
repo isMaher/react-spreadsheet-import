@@ -1,33 +1,17 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
-import { createContext } from "react"
-import type { RsiProps } from "../types"
-import type { CustomTheme } from "../theme"
+"use client"
 
-export const RsiContext = createContext({} as any)
+import { ChakraProvider, Toaster } from "@chakra-ui/react"
+import { system } from "./theme/theme"
+import { ColorModeProvider, ColorModeProviderProps } from "./ui/color-mode"
 
-type ProvidersProps<T extends string> = {
-  children: React.ReactNode
-  theme: CustomTheme
-  rsiValues: RsiProps<T>
-}
-
-export const rootId = "chakra-modal-rsi"
-
-export const Providers = <T extends string>({ children, theme, rsiValues }: ProvidersProps<T>) => {
-  const mergedTheme = extendTheme(theme)
-
-  if (!rsiValues.fields) {
-    throw new Error("Fields must be provided to react-spreadsheet-import")
-  }
-
+export function Provider(props: ColorModeProviderProps & { lng: "ar" | "en" }) {
   return (
-    <RsiContext.Provider value={rsiValues}>
-      <ChakraProvider>
-        {/* cssVarsRoot used to override RSI defaultTheme but not the rest of chakra defaultTheme */}
-        <ChakraProvider cssVarsRoot={`#${rootId}`} theme={mergedTheme}>
-          {children}
-        </ChakraProvider>
+    <div>
+      <ChakraProvider value={system}>
+        <ColorModeProvider defaultTheme="light" {...props} />
+        <Toaster />
+        {/* <feedbackDialog.Viewport /> */}
       </ChakraProvider>
-    </RsiContext.Provider>
+    </div>
   )
 }
