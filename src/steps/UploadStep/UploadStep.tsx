@@ -1,10 +1,11 @@
-import { Box, Dialog, Heading, Text } from "@chakra-ui/react"
-import { useCallback, useState } from "react"
 import type XLSX from "xlsx-ugnis"
-import { useRsi } from "../../hooks/useRsi"
+import { Box, Heading, ModalBody, Text, useStyleConfig } from "@chakra-ui/react"
 import { DropZone } from "./components/DropZone"
+import { useRsi } from "../../hooks/useRsi"
 import { ExampleTable } from "./components/ExampleTable"
+import { useCallback, useState } from "react"
 import { FadingOverlay } from "./components/FadingOverlay"
+import type { themeOverrides } from "../../theme"
 
 type UploadProps = {
   onContinue: (data: XLSX.WorkBook, file: File) => Promise<void>
@@ -12,6 +13,7 @@ type UploadProps = {
 
 export const UploadStep = ({ onContinue }: UploadProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const styles = useStyleConfig("UploadStep") as (typeof themeOverrides)["components"]["UploadStep"]["baseStyle"]
   const { translations, fields } = useRsi()
   const handleOnContinue = useCallback(
     async (data: XLSX.WorkBook, file: File) => {
@@ -22,19 +24,15 @@ export const UploadStep = ({ onContinue }: UploadProps) => {
     [onContinue],
   )
   return (
-    <Dialog.Body>
-      <Heading css={{ color: "textColor", fontSize: "3xl" }}>{translations.uploadStep.title}</Heading>
-      <Text css={{ fontSize: "2xl", lineHeight: 8, fontWeight: "semibold", color: "textColor" }}>
-        {translations.uploadStep.manifestTitle}
-      </Text>
-      <Text css={{ fontSize: "md", lineHeight: 6, color: "subtitleColor", mb: "1rem" }}>
-        {translations.uploadStep.manifestDescription}
-      </Text>
-      <Box css={{ mb: "0.5rem", position: "relative", h: "72px" }}>
+    <ModalBody>
+      <Heading sx={styles.heading}>{translations.uploadStep.title}</Heading>
+      <Text sx={styles.title}>{translations.uploadStep.manifestTitle}</Text>
+      <Text sx={styles.subtitle}>{translations.uploadStep.manifestDescription}</Text>
+      <Box sx={styles.tableWrapper}>
         <ExampleTable fields={fields} />
         <FadingOverlay />
       </Box>
       <DropZone onContinue={handleOnContinue} isLoading={isLoading} />
-    </Dialog.Body>
+    </ModalBody>
   )
 }

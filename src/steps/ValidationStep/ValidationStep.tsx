@@ -1,14 +1,15 @@
-import { Box, Button, Dialog, Heading, Switch, Toaster } from "@chakra-ui/react"
 import { useCallback, useMemo, useState } from "react"
-import type { RowsChangeData } from "react-data-grid"
-import { SubmitDataAlert } from "../../components/Alerts/SubmitDataAlert"
+import { Box, Button, Heading, ModalBody, Switch, useStyleConfig, useToast } from "@chakra-ui/react"
 import { ContinueButton } from "../../components/ContinueButton"
-import { Table } from "../../components/Table"
 import { useRsi } from "../../hooks/useRsi"
-import type { Data } from "../../types"
-import { generateColumns } from "./components/columns"
 import type { Meta } from "./types"
 import { addErrorsAndRunHooks } from "./utils/dataMutations"
+import { generateColumns } from "./components/columns"
+import { Table } from "../../components/Table"
+import { SubmitDataAlert } from "../../components/Alerts/SubmitDataAlert"
+import type { Data } from "../../types"
+import type { themeOverrides } from "../../theme"
+import type { RowsChangeData } from "react-data-grid"
 
 type Props<T extends string> = {
   initialData: (Data<T> & Meta)[]
@@ -18,6 +19,10 @@ type Props<T extends string> = {
 
 export const ValidationStep = <T extends string>({ initialData, file, onBack }: Props<T>) => {
   const { translations, fields, onClose, onSubmit, rowHook, tableHook } = useRsi<T>()
+  const styles = useStyleConfig(
+    "ValidationStep",
+  ) as (typeof themeOverrides)["components"]["ValidationStep"]["baseStyle"]
+  const toast = useToast()
 
   const [data, setData] = useState<(Data<T> & Meta)[]>(initialData)
 
@@ -102,7 +107,7 @@ export const ValidationStep = <T extends string>({ initialData, file, onBack }: 
           onClose()
         })
         .catch((err: Error) => {
-          Toaster({
+          toast({
             status: "error",
             variant: "left-accent",
             position: "bottom-left",
@@ -135,30 +140,21 @@ export const ValidationStep = <T extends string>({ initialData, file, onBack }: 
   return (
     <>
       <SubmitDataAlert isOpen={showSubmitAlert} onClose={() => setShowSubmitAlert(false)} onConfirm={submitData} />
-      <Dialog.Body pb={0}>
+      <ModalBody pb={0}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="2rem" flexWrap="wrap" gap="8px">
-          <Heading
-            css={{
-              color: "textColor",
-              fontSize: "3xl",
-            }}
-          >
-            {translations.validationStep.title}
-          </Heading>
+          <Heading sx={styles.heading}>{translations.validationStep.title}</Heading>
           <Box display="flex" gap="16px" alignItems="center" flexWrap="wrap">
             <Button variant="outline" size="sm" onClick={deleteSelectedRows}>
               {translations.validationStep.discardButtonTitle}
             </Button>
-            <Switch.Root
+            <Switch
               display="flex"
               alignItems="center"
               isChecked={filterByErrors}
               onChange={() => setFilterByErrors(!filterByErrors)}
             >
-              <Switch.HiddenInput />
-              <Switch.Control />
-              <Switch.Label> {translations.validationStep.filterSwitchTitle}</Switch.Label>
-            </Switch.Root>
+              {translations.validationStep.filterSwitchTitle}
+            </Switch>
           </Box>
         </Box>
         <Table
@@ -178,7 +174,7 @@ export const ValidationStep = <T extends string>({ initialData, file, onBack }: 
             ),
           }}
         />
-      </Dialog.Body>
+      </ModalBody>
       <ContinueButton
         isLoading={isSubmitting}
         onContinue={onContinue}

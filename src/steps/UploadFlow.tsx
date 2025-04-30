@@ -1,16 +1,16 @@
-import { Progress, Toaster } from "@chakra-ui/react"
 import { useCallback, useState } from "react"
+import { Progress, useToast } from "@chakra-ui/react"
 import type XLSX from "xlsx-ugnis"
-import { useRsi } from "../hooks/useRsi"
-import type { RawData } from "../types"
-import { exceedsMaxRecords } from "../utils/exceedsMaxRecords"
-import { mapWorkbook } from "../utils/mapWorkbook"
-import { MatchColumnsStep } from "./MatchColumnsStep/MatchColumnsStep"
+import { UploadStep } from "./UploadStep/UploadStep"
 import { SelectHeaderStep } from "./SelectHeaderStep/SelectHeaderStep"
 import { SelectSheetStep } from "./SelectSheetStep/SelectSheetStep"
-import { UploadStep } from "./UploadStep/UploadStep"
+import { mapWorkbook } from "../utils/mapWorkbook"
 import { ValidationStep } from "./ValidationStep/ValidationStep"
 import { addErrorsAndRunHooks } from "./ValidationStep/utils/dataMutations"
+import { MatchColumnsStep } from "./MatchColumnsStep/MatchColumnsStep"
+import { exceedsMaxRecords } from "../utils/exceedsMaxRecords"
+import { useRsi } from "../hooks/useRsi"
+import type { RawData } from "../types"
 
 export enum StepType {
   upload = "upload",
@@ -59,9 +59,10 @@ export const UploadFlow = ({ state, onNext, onBack }: Props) => {
     tableHook,
   } = useRsi()
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const toast = useToast()
   const errorToast = useCallback(
     (description: string) => {
-      Toaster({
+      toast({
         status: "error",
         variant: "left-accent",
         position: "bottom-left",
@@ -70,7 +71,7 @@ export const UploadFlow = ({ state, onNext, onBack }: Props) => {
         isClosable: true,
       })
     },
-    [translations],
+    [toast, translations],
   )
 
   switch (state.type) {
@@ -164,14 +165,6 @@ export const UploadFlow = ({ state, onNext, onBack }: Props) => {
     case StepType.validateData:
       return <ValidationStep initialData={state.data} file={uploadedFile!} onBack={onBack} />
     default:
-      return (
-        <Progress.Root isIndeterminate>
-          <Progress.Track>
-            <Progress.Range />
-          </Progress.Track>
-          <Progress.Label />
-          <Progress.ValueText />
-        </Progress.Root>
-      )
+      return <Progress isIndeterminate />
   }
 }

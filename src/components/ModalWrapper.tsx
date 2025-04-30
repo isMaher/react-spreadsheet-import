@@ -1,28 +1,31 @@
-import React from "react"
-import { DialogBody, DialogCloseTrigger, DialogContent, DialogHeader, DialogRoot } from "./ui/dialog"
+import type React from "react"
+import { Modal, ModalContent, ModalOverlay } from "@chakra-ui/react"
+import { ModalCloseButton } from "./ModalCloseButton"
+import { useRsi } from "../hooks/useRsi"
 
 type Props = {
   children: React.ReactNode
-  open: boolean
-  setOpen: (open: boolean) => void
+  isOpen: boolean
+  onClose: () => void
 }
 
-export const ModalWrapper = ({ children, open, setOpen }: Props) => {
+export const ModalWrapper = ({ children, isOpen, onClose }: Props) => {
+  const { rtl } = useRsi()
   return (
-    <DialogRoot
-      open={open}
-      onOpenChange={({ open }: { open: boolean }) => setOpen(open)}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
       id="rsi"
       variant="rsi"
       closeOnEsc={false}
       closeOnOverlayClick={false}
       scrollBehavior="inside"
     >
-      <DialogContent>
-        <DialogCloseTrigger />
-        <DialogHeader padding="0 0 24px 0" />
-        <DialogBody padding="0">{children}</DialogBody>
-      </DialogContent>
-    </DialogRoot>
+      <div dir={rtl ? "rtl" : "ltr"}>
+        <ModalOverlay />
+        <ModalCloseButton onClose={onClose} />
+        <ModalContent>{children}</ModalContent>
+      </div>
+    </Modal>
   )
 }

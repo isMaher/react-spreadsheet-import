@@ -1,9 +1,11 @@
-import { Box, Button, Text, Toaster } from "@chakra-ui/react"
-import { useState } from "react"
+import { Box, Button, Text, useStyleConfig, useToast } from "@chakra-ui/react"
 import { useDropzone } from "react-dropzone"
 import * as XLSX from "xlsx-ugnis"
+import { useState } from "react"
+import { getDropZoneBorder } from "../utils/getDropZoneBorder"
 import { useRsi } from "../../../hooks/useRsi"
 import { readFileAsync } from "../utils/readFilesAsync"
+import type { themeOverrides } from "../../../theme"
 
 type DropZoneProps = {
   onContinue: (data: XLSX.WorkBook, file: File) => void
@@ -12,6 +14,8 @@ type DropZoneProps = {
 
 export const DropZone = ({ onContinue, isLoading }: DropZoneProps) => {
   const { translations, maxFileSize, dateFormat, parseRaw } = useRsi()
+  const styles = useStyleConfig("UploadStep") as (typeof themeOverrides)["components"]["UploadStep"]["baseStyle"]
+  const toast = useToast()
   const [loading, setLoading] = useState(false)
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     noClick: true,
@@ -26,7 +30,7 @@ export const DropZone = ({ onContinue, isLoading }: DropZoneProps) => {
     onDropRejected: (fileRejections) => {
       setLoading(false)
       fileRejections.forEach((fileRejection) => {
-        Toaster({
+        toast({
           status: "error",
           variant: "left-accent",
           position: "bottom-left",
@@ -54,13 +58,7 @@ export const DropZone = ({ onContinue, isLoading }: DropZoneProps) => {
   return (
     <Box
       {...getRootProps()}
-      css={{
-        bgGradient: `repeating-linear(0deg, 'rsi.500', 'rsi.500' 10px, transparent 10px, transparent 20px, 'rsi.500' 20px), repeating-linear-gradient(90deg, 'rsi.500', 'rsi.500' 10px, transparent 10px, transparent 20px, 'rsi.500' 20px), repeating-linear-gradient(180deg, 'rsi.500', 'rsi.500' 10px, transparent 10px, transparent 20px, 'rsi.500' 20px), repeating-linear-gradient(270deg, 'rsi.500', 'rsi.500' 10px, transparent 10px, transparent 20px, 'rsi.500' 20px)`,
-        backgroundSize: "2px 100%, 100% 2px, 2px 100% , 100% 2px",
-        backgroundPosition: "0 0, 0 0, 100% 0, 0 100%",
-        backgroundRepeat: "no-repeat",
-        borderRadius: "4px",
-      }}
+      {...getDropZoneBorder(styles.dropZoneBorder)}
       width="100%"
       display="flex"
       justifyContent="center"
@@ -70,19 +68,13 @@ export const DropZone = ({ onContinue, isLoading }: DropZoneProps) => {
     >
       <input {...getInputProps()} data-testid="rsi-dropzone" />
       {isDragActive ? (
-        <Text css={{ size: "lg", lineHeight: 7, fontWeight: "semibold", color: "textColor" }}>
-          {translations.uploadStep.dropzone.activeDropzoneTitle}
-        </Text>
+        <Text sx={styles.dropzoneText}>{translations.uploadStep.dropzone.activeDropzoneTitle}</Text>
       ) : loading || isLoading ? (
-        <Text css={{ size: "lg", lineHeight: 7, fontWeight: "semibold", color: "textColor" }}>
-          {translations.uploadStep.dropzone.loadingTitle}
-        </Text>
+        <Text sx={styles.dropzoneText}>{translations.uploadStep.dropzone.loadingTitle}</Text>
       ) : (
         <>
-          <Text css={{ size: "lg", lineHeight: 7, fontWeight: "semibold", color: "textColor" }}>
-            {translations.uploadStep.dropzone.title}
-          </Text>
-          <Button css={{ mt: "1rem" }} onClick={open}>
+          <Text sx={styles.dropzoneText}>{translations.uploadStep.dropzone.title}</Text>
+          <Button sx={styles.dropzoneButton} onClick={open}>
             {translations.uploadStep.dropzone.buttonTitle}
           </Button>
         </>

@@ -1,4 +1,5 @@
-import { Button, Dialog } from "@chakra-ui/react"
+import { Button, ModalFooter, useStyleConfig } from "@chakra-ui/react"
+import { themeOverrides } from "../theme"
 
 type ContinueButtonProps = {
   onContinue: (val: any) => void
@@ -9,36 +10,24 @@ type ContinueButtonProps = {
 }
 
 export const ContinueButton = ({ onContinue, onBack, title, backTitle, isLoading }: ContinueButtonProps) => {
+  const styles = useStyleConfig("Modal") as (typeof themeOverrides)["components"]["Modal"]["baseStyle"]
   const nextButtonMobileWidth = onBack ? "8rem" : "100%"
   return (
-    <Dialog.Footer>
+    <ModalFooter>
       {onBack && (
-        <Button
-          size="md"
-          css={{
-            gridColumn: "1",
-            gridRow: "1",
-            justifySelf: "start",
-          }}
-          onClick={onBack}
-          loading={isLoading}
-        >
+        <Button size="md" sx={styles.backButton} onClick={onBack} isLoading={isLoading} variant="link">
           {backTitle}
         </Button>
       )}
       <Button
         size="lg"
         w={{ base: nextButtonMobileWidth, md: "21rem" }}
-        css={{
-          gridColumn: "1 / 3",
-          gridRow: "1",
-          justifySelf: "center",
-        }}
+        sx={styles.continueButton}
         onClick={onContinue}
-        loading={isLoading}
+        isLoading={isLoading}
       >
         {title}
       </Button>
-    </Dialog.Footer>
+    </ModalFooter>
   )
 }

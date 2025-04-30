@@ -1,5 +1,5 @@
 import { Column, FormatterProps, useRowSelection } from "react-data-grid"
-import { Radio } from "src/components/ui/radio"
+import { Radio } from "@chakra-ui/react"
 import type { RawData } from "../../../types"
 
 const SELECT_COLUMN_KEY = "select-row"
@@ -9,15 +9,16 @@ function SelectFormatter(props: FormatterProps<unknown>) {
 
   return (
     <Radio
+      bg="white"
       aria-label="Select"
-      // isChecked={isRowSelected}
-      // onChange={(event) => {
-      //   onRowSelectionChange({
-      //     row: props.row,
-      //     checked: Boolean(event.target.checked),
-      //     isShiftClick: (event.nativeEvent as MouseEvent).shiftKey,
-      //   })
-      // }}
+      isChecked={isRowSelected}
+      onChange={(event) => {
+        onRowSelectionChange({
+          row: props.row,
+          checked: Boolean(event.target.checked),
+          isShiftClick: (event.nativeEvent as MouseEvent).shiftKey,
+        })
+      }}
     />
   )
 }

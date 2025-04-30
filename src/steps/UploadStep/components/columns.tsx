@@ -1,8 +1,7 @@
-import { Box } from "@chakra-ui/react"
 import type { Column } from "react-data-grid"
-import { CgInfo } from "react-icons/cg"
-import { Tooltip } from "src/components/ui/tooltip"
+import { Box, Tooltip } from "@chakra-ui/react"
 import type { Fields } from "../../../types"
+import { CgInfo } from "react-icons/cg"
 
 export const generateColumns = <T extends string>(fields: Fields<T>) =>
   fields.map(
